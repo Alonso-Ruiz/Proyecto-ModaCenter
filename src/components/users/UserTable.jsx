@@ -69,3 +69,4 @@ export default function UserTable({ users, onEdit, onDelete }) {
     </section>
   );
 }
+

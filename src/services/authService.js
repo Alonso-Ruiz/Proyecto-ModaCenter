@@ -67,3 +67,4 @@ export function saveSession(session) {
 export function clearSession() {
   window.sessionStorage.removeItem('modacenter.session');
 }
+

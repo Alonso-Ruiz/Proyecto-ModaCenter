@@ -8,3 +8,4 @@ export default function StatusBadge({ children, tone = 'slate' }) {
 
   return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tones[tone]}`}>{children}</span>;
 }
+

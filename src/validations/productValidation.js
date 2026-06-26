@@ -68,3 +68,4 @@ export function normalizeProductPayload(product) {
     minStock: Number(product.minStock),
   };
 }
+

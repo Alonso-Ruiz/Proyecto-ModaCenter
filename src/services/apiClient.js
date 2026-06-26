@@ -12,6 +12,7 @@ async function parseResponse(response) {
   return data;
 }
 
+
 export async function apiClient(path, options = {}) {
   let response;
 
@@ -29,3 +30,4 @@ export async function apiClient(path, options = {}) {
 
   return parseResponse(response);
 }
+
