@@ -65,3 +65,4 @@ export default function AdminLayout({ active = 'dashboard', children }) {
     </div>
   );
 }
+

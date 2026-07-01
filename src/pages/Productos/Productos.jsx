@@ -11,6 +11,7 @@ import {
   validateProduct,
 } from '../../validations/productValidation';
 
+
 export default function Productos() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');

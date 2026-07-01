@@ -78,3 +78,4 @@ export function getSession() {
 export function clearSession() {
   window.sessionStorage.removeItem('modacenter.session');
 }
+
