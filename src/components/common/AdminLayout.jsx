@@ -1,15 +1,19 @@
 import { Link } from 'react-router-dom';
-import { clearSession } from '../../services/authService';
+import { clearSession, getSession } from '../../services/authService';
 
 const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', key: 'dashboard' },
   { label: 'Productos', to: '/admin/productos', key: 'products' },
-  { label: 'Inventario', to: '#', key: 'inventory' },
-  { label: 'Reportes', to: '#', key: 'reports' },
+  { label: 'Inventario', to: '/admin/inventario', key: 'inventory' },
+  { label: 'Reportes', to: '/admin/reportes', key: 'reports' },
   { label: 'Usuarios', to: '/admin/usuarios', key: 'users' },
 ];
 
 export default function AdminLayout({ active = 'dashboard', children }) {
+  const session = getSession();
+  const userName = session?.user?.name || 'Admin Usuario';
+  const initial = userName.charAt(0).toUpperCase();
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="grid min-h-screen grid-cols-1 lg:h-screen lg:grid-cols-[220px_1fr]">
@@ -18,7 +22,7 @@ export default function AdminLayout({ active = 'dashboard', children }) {
             <div className="grid h-7 w-7 place-items-center rounded-md bg-slate-600 text-[10px] font-bold">MC</div>
             <div>
               <p className="text-sm font-semibold leading-tight">ModaCenter</p>
-              <p className="text-xs text-slate-400">Administrador</p>
+              <p className="text-xs text-slate-400">{session?.user?.role || 'Administrador'}</p>
             </div>
           </div>
 
@@ -32,9 +36,8 @@ export default function AdminLayout({ active = 'dashboard', children }) {
                 <Link
                   key={item.key}
                   to={item.to}
-                  className={`block rounded-lg px-3 py-2 ${
-                    active === item.key ? 'bg-white/15 font-semibold text-white' : 'text-slate-300 hover:bg-white/10'
-                  }`}
+                  className={`block rounded-lg px-3 py-2 ${active === item.key ? 'bg-white/15 font-semibold text-white' : 'text-slate-300 hover:bg-white/10'
+                    }`}
                 >
                   {item.label}
                 </Link>
@@ -44,8 +47,8 @@ export default function AdminLayout({ active = 'dashboard', children }) {
 
           <div className="mt-auto space-y-2 pt-5">
             <div className="flex items-center gap-2 px-2 text-xs text-slate-300">
-              <div className="grid h-6 w-6 place-items-center rounded-full bg-slate-500 font-semibold">A</div>
-              <span>Admin Usuario</span>
+              <div className="grid h-6 w-6 place-items-center rounded-full bg-slate-500 font-semibold">{initial}</div>
+              <span>{userName}</span>
             </div>
             <Link
               to="/login"

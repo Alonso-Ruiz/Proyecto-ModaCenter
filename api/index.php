@@ -1,7 +1,11 @@
 <?php
 
 require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/controllers/DashboardController.php';
+require_once __DIR__ . '/controllers/InventoryController.php';
 require_once __DIR__ . '/controllers/ProductController.php';
+require_once __DIR__ . '/controllers/ReportController.php';
+require_once __DIR__ . '/controllers/SaleController.php';
 require_once __DIR__ . '/controllers/UserController.php';
 
 header('Access-Control-Allow-Origin: http://localhost:5173');
@@ -25,12 +29,41 @@ try {
         auth_login();
     }
 
+    if ($resource === 'dashboard' && $method === 'GET') {
+        dashboard_metrics();
+    }
+
     if ($resource === 'productos') {
         if ($method === 'GET' && !$id) products_index();
         if ($method === 'POST') products_store();
         if ($method === 'GET' && $id) products_show($id);
         if ($method === 'PUT' && $id) products_update($id);
         if ($method === 'DELETE' && $id) products_destroy($id);
+    }
+
+    if ($resource === 'inventario') {
+        $subResource = $segments[1] ?? '';
+        $subId = isset($segments[2]) ? (int) $segments[2] : null;
+
+        if ($subResource === 'productos' && $method === 'GET') inventory_products_index();
+        if ($subResource === 'ingresos' && $method === 'GET' && !$subId) inventory_entries_index();
+        if ($subResource === 'ingresos' && $method === 'POST') inventory_entries_store();
+        if ($subResource === 'ingresos' && $method === 'GET' && $subId) inventory_entries_show($subId);
+    }
+
+    if ($resource === 'reportes') {
+        if (($segments[1] ?? '') === 'metricas' && $method === 'GET') reports_metrics();
+        if ($method === 'GET' && !$id) reports_index();
+        if ($method === 'POST') reports_store();
+        if ($method === 'GET' && $id) reports_show($id);
+        if ($method === 'PUT' && $id) reports_update($id);
+        if ($method === 'DELETE' && $id) reports_destroy($id);
+    }
+
+    if ($resource === 'ventas') {
+        if ($method === 'GET' && !$id) sales_index();
+        if ($method === 'POST') sales_store();
+        if ($method === 'GET' && $id) sales_show($id);
     }
 
     if ($resource === 'usuarios') {

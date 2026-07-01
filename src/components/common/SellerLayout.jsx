@@ -1,0 +1,56 @@
+import { Link } from 'react-router-dom';
+import { clearSession, getSession } from '../../services/authService';
+
+const navItems = [
+  { label: 'Punto de Venta', to: '/vendedor/pos', key: 'pos' },
+  { label: 'Historial', to: '/vendedor/historial', key: 'history' },
+  { label: 'Consultar Inventario', to: '/vendedor/inventario', key: 'inventory' },
+];
+
+export default function SellerLayout({ active = 'pos', children }) {
+  const session = getSession();
+  const userName = session?.user?.name || 'Vendedor';
+  const initial = userName.charAt(0).toUpperCase();
+
+  return (
+    <div className="min-h-screen bg-slate-100 text-slate-800">
+      <div className="grid min-h-screen grid-cols-1 lg:h-screen lg:grid-cols-[230px_1fr]">
+        <aside className="flex flex-col bg-gradient-to-b from-[#0e1d39] to-[#09162d] p-3 text-slate-200 lg:overflow-hidden">
+          <div className="mb-4 flex items-center gap-2 rounded-lg bg-white/5 p-2">
+            <div className="grid h-8 w-8 place-items-center rounded-md bg-slate-600 text-[10px] font-bold">MC</div>
+            <div>
+              <p className="text-sm font-semibold leading-tight">ModaCenter</p>
+              <p className="text-xs text-slate-400">Vendedor</p>
+            </div>
+          </div>
+
+          <nav className="space-y-1 text-[13px]">
+            {navItems.map((item) => (
+              <Link
+                key={item.key}
+                to={item.to}
+                className={`block rounded-lg px-3 py-3 ${
+                  active === item.key ? 'bg-white/15 font-semibold text-white' : 'text-slate-300 hover:bg-white/10'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="mt-auto space-y-4 border-t border-white/10 pt-5">
+            <div className="flex items-center gap-2 px-2 text-xs text-slate-300">
+              <div className="grid h-7 w-7 place-items-center rounded-full bg-slate-500 font-semibold">{initial}</div>
+              <span>{userName}</span>
+            </div>
+            <Link to="/login" onClick={clearSession} className="block px-2 text-sm text-slate-400 hover:text-white">
+              Cerrar Sesion
+            </Link>
+          </div>
+        </aside>
+
+        <main className="lg:h-screen lg:overflow-auto">{children}</main>
+      </div>
+    </div>
+  );
+}

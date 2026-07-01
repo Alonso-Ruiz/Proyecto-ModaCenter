@@ -18,7 +18,18 @@ function user_row(array $row): array
 
 function users_index(): void
 {
-    $stmt = database()->query('SELECT * FROM usuarios ORDER BY id DESC');
+    $stmt = database()->query(
+        'SELECT usuarios.*,
+                COALESCE(SUM(CASE
+                  WHEN ventas.estado = "Completado"
+                   AND YEAR(ventas.fecha) = YEAR(CURDATE())
+                   AND MONTH(ventas.fecha) = MONTH(CURDATE())
+                  THEN ventas.total ELSE 0 END), 0) AS ventas_mes
+         FROM usuarios
+         LEFT JOIN ventas ON ventas.vendedor_id = usuarios.id
+         GROUP BY usuarios.id
+         ORDER BY usuarios.id DESC'
+    );
     json_response(array_map('user_row', $stmt->fetchAll()));
 }
 
@@ -63,7 +74,18 @@ function users_store(): void
 
 function users_show(int $id): void
 {
-    $stmt = database()->prepare('SELECT * FROM usuarios WHERE id = ?');
+    $stmt = database()->prepare(
+        'SELECT usuarios.*,
+                COALESCE(SUM(CASE
+                  WHEN ventas.estado = "Completado"
+                   AND YEAR(ventas.fecha) = YEAR(CURDATE())
+                   AND MONTH(ventas.fecha) = MONTH(CURDATE())
+                  THEN ventas.total ELSE 0 END), 0) AS ventas_mes
+         FROM usuarios
+         LEFT JOIN ventas ON ventas.vendedor_id = usuarios.id
+         WHERE usuarios.id = ?
+         GROUP BY usuarios.id'
+    );
     $stmt->execute([$id]);
     $user = $stmt->fetch();
 

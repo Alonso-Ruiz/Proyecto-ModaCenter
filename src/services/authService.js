@@ -52,7 +52,13 @@ export async function login(credentials) {
       }),
     });
   } catch (error) {
-    if (error.message !== 'No se pudo conectar con la API REST.') {
+    const isConnectionOrServerFailure =
+      error.message === 'No se pudo conectar con la API REST.' ||
+      error.message === 'No se pudo completar la solicitud.' ||
+      error.message.startsWith('Error de base de datos') ||
+      error.message.startsWith('Error del servidor');
+
+    if (!isConnectionOrServerFailure) {
       throw error;
     }
 
@@ -62,6 +68,11 @@ export async function login(credentials) {
 
 export function saveSession(session) {
   window.sessionStorage.setItem('modacenter.session', JSON.stringify(session));
+}
+
+export function getSession() {
+  const session = window.sessionStorage.getItem('modacenter.session');
+  return session ? JSON.parse(session) : null;
 }
 
 export function clearSession() {

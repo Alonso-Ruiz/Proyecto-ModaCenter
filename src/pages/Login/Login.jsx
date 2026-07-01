@@ -33,7 +33,7 @@ export default function Login() {
       setLoading(true);
       const session = await login(credentials);
       saveSession(session);
-      navigate('/admin/dashboard');
+      navigate(session.user.role === 'Vendedor' ? '/vendedor/pos' : '/admin/dashboard');
     } catch (error) {
       setAuthError(error.message || 'Credenciales invalidas.');
     } finally {
